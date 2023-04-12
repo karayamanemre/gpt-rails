@@ -47,6 +47,7 @@ module ApplicationHelper
       Rails.logger.error "Error generating image: Image URL is nil. Response: #{response.body}"
       DEFAULT_IMAGE_URL
     else
+      Rails.logger.info "Generated image URL: #{image_url}" # <-- Add this line
       image_url
     end
   else
@@ -56,5 +57,21 @@ module ApplicationHelper
 rescue StandardError => e
   Rails.logger.error "Error generating image: #{e.message}"
   DEFAULT_IMAGE_URL
+  end
+
+  def generate_image_description(text)
+    prompt = "Create a DALL-E image prompt for the following text: '#{text}'"
+    image_description = generate_response(prompt)
+    image_description.strip
+  end
+
+  def generate_text_and_image(prompt)
+    text_response = generate_response(prompt)
+    image_description = generate_image_description(text_response)
+    image_url = generate_image(image_description)
+    {
+      text: text_response.strip,
+      image_url: image_url
+    }
   end
 end

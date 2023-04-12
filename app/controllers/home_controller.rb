@@ -5,15 +5,10 @@ class HomeController < ApplicationController
   end
 
   def result
-    generate_text = params[:text] == 'true'
-    generate_image = params[:image] == 'true'
-    
-    if generate_text
-      @generated_text = generate_response(params[:text_prompt])
-    end
-    
-    if generate_image
-      @generated_image = generate_image(params[:image_prompt])
-    end
+    text_prompt = params[:text_prompt]
+    result = generate_text_and_image(text_prompt)
+
+    @generated_text = result[:text]
+    @generated_image = result[:image_url]
   end
 end
