@@ -1,13 +1,42 @@
-<div class="flex items-center justify-center p-8 m-8 rounded-xl bg-gray-400 shadow-xl w-96">
-<%= form_tag(result_path, method: :get, class: "flex flex-col gap-5 justify-center items-center p-4 text-center") do %>
-    <div class="flex flex-col justify-center items-center">
-      <%= label_tag :text_prompt, "Enter a text prompt" %><br>
-      <%= text_field_tag :text_prompt, nil, class: 'rounded border-0 w-full outline-none transition-all duration-200 ease-linear', required: true %>
+<div class="flex items-center justify-center p-8 m-8 rounded-xl bg-gray-400 shadow-xl w-3/5">
+  <%= form_tag(result_path, method: :get, class: "flex flex-col gap-5 justify-center items-center p-4 text-center w-full sm:w-2/4") do %>
+    <div class="flex flex-col justify-center items-center w-full text-prompt">
+      <%= label_tag :text_prompt, "Enter a text prompt", class: "font-bold mb-2" %><br>
+      <%= text_field_tag :text_prompt, nil, class: 'rounded border-0 w-full outline-none transition-all duration-200 ease-linear text-prompt'%>
     </div>
-    <div class="flex flex-col justify-center items-center">
-      <%= label_tag :image_prompt, "Enter an image prompt" %><br>
-      <%= text_field_tag :image_prompt, nil, class: 'rounded border-0 w-full outline-none transition-all duration-200 ease-linear', required: true %>
+    <div class="flex flex-col justify-center items-center w-full image-prompt">
+      <%= label_tag :image_prompt, "Enter an image prompt", class: "font-bold mb-2" %><br>
+      <%= text_field_tag :image_prompt, nil, class: 'rounded border-0 w-full outline-none transition-all duration-200 ease-linear image-prompt'%>
+    </div>
+    <div class="flex justify-center items-center w-full">
+      <%= label_tag :generate_type, "Generate", class: "font-bold mr-2" %><br>
+      <%= check_box_tag :text, true, true, class: "mr-1", id: "text-checkbox" %>
+      <%= label_tag :text, "Text", class: "mr-2" %>
+      <%= check_box_tag :image, true, true, class: "mr-1", id: "image-checkbox" %>
+      <%= label_tag :image, "Image", class: "mr-2" %>
     </div>
     <%= submit_tag 'Generate', class: 'cursor-pointer inline-block px-4 py-2 mb-4 text-white bg-blue-500 shadow rounded hover:bg-green-900 transition-all duration-200 ease-linear' %>
   <% end %>
 </div>
+
+<script>
+$(document).ready(function() {
+  $('.text-prompt, .image-prompt').show();
+
+  $('#text-checkbox').change(function() {
+    if($(this).is(':checked')) {
+      $('.text-prompt').show();
+    } else {
+      $('.text-prompt').hide();
+    }
+  });
+
+  $('#image-checkbox').change(function() {
+    if($(this).is(':checked')) {
+      $('.image-prompt').show();
+    } else {
+      $('.image-prompt').hide();
+    }
+  });
+});
+</script>
