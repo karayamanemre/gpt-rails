@@ -7,5 +7,11 @@
 1. Clone the repository:
 
 ```bash
-   git clone https://github.com/karayamanemre/gpt-rails.git
+git clone https://github.com/karayamanemre/gpt-rails.git
+```
+
+2. Install the required gems:
+
+```bash
+bundle install
 ```
