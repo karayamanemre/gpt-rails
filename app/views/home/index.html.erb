@@ -1,9 +1,11 @@
-<button onclick="generateStory()">Generate</button>
-
-<script>
-
-function generateStory() {
-  window.location.replace("/result")
-}
-
-</script>
+<div class="flex flex-col items-center justify-center p-4">
+  <%= link_to 'Generate Story', result_path, class: 'inline-block px-4 py-2 mb-4 text-white bg-green-500 rounded hover:bg-green-600' %>
+  <div class="max-w-sm overflow-hidden rounded-lg bg-white shadow-lg duration-100 hover:shadow-2xl">
+    <%= image_tag('https://images.pexels.com/photos/10952307/pexels-photo-10952307.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', alt: "Placeholder Image", class: "h-auto w-full") %>
+    <div class="p-5">
+      <p class="prose max-w-none text-lg leading-relaxed text-center">
+        Click button to generate a good story
+      </p>
+    </div>
+  </div>
+</div>
