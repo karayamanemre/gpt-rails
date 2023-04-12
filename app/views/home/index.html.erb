@@ -1,9 +1,32 @@
 <div class="w-full max-w-md mt-5 p-5 bg-white rounded-md shadow-lg">
-  <%= form_tag(result_path, method: :get, class: "w-full max-w-md mt-5") do %>
+  <h2 class="text-center text-xl font-bold mb-4">
+    <i class="fas fa-cogs mr-2"></i>
+    AI Text and Image Generator
+  </h2>
+  <p class="text-center mb-4">Enter a text prompt and the AI will generate a relevant text and image for you.</p>
+  <%= form_tag(result_path, method: :get, class: "w-full max-w-md mt-5", id: "generateForm") do %>
     <div class="flex flex-col justify-center items-center w-full text-prompt">
       <%= label_tag :text_prompt, "Enter a text prompt", class: "font-bold" %><br>
       <%= text_field_tag :text_prompt, nil, class: 'rounded border-1 w-full outline-none transition-all duration-200 ease-linear text-prompt'%>
     </div>
-    <%= submit_tag 'Generate', class: 'cursor-pointer inline-flex items-center justify-center w-full max-w-md px-4 py-2 mt-5 text-white bg-purple-500 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-purple-600 active:bg-purple-700 focus:outline-none focus:border-purple-700 focus:ring focus:ring-purple-300 disabled:opacity-25 transition ease-in-out duration-150' %>
+    <div class="mt-4">
+      <%= label_tag :style, "Choose a style", class: "font-bold" %><br>
+      <%= select_tag :style, options_for_select(['Cartoon', 'Realistic', 'Sketch']), class: 'rounded border-1 w-full outline-none transition-all duration-200 ease-linear'%>
+    </div>
+    <div class="mt-4">
+      <%= label_tag :color, "Choose a color", class: "font-bold" %><br>
+      <%= select_tag :color, options_for_select(['Black and White', 'Colorful', 'Monochrome']), class: 'rounded border-1 w-full outline-none transition-all duration-200 ease-linear'%>
+    </div>
+    <%= button_tag(type: 'submit', class: 'cursor-pointer inline-flex items-center justify-center w-full max-w-md px-4 py-2 mt-5 text-white bg-purple-500 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-purple-600 active:bg-purple-700 focus:outline-none focus:border-purple-700 focus:ring focus:ring-purple-300 disabled:opacity-25 transition ease-in-out duration-150') do %>
+      <i class="fas fa-play mr-1"></i> Generate
+    <% end %>
   <% end %>
 </div>
+
+<script>
+  document.getElementById("generateForm").addEventListener("submit", function () {
+    const loadingScreen = document.createElement("div");
+    loadingScreen.innerHTML = '<div class="fixed inset-0 flex items-center justify-center text-xl text-white bg-black bg-opacity-75"><i class="fas fa-spinner fa-spin mr-2"></i>Generating... Please wait...</div>';
+    document.body.appendChild(loadingScreen);
+  });
+</script>

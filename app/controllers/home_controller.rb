@@ -5,10 +5,11 @@ class HomeController < ApplicationController
   end
 
   def result
-    text_prompt = params[:text_prompt]
-    result = generate_text_and_image(text_prompt)
-
-    @generated_text = result[:text]
-    @generated_images = result[:image_url]
+    prompt = params[:text_prompt]
+    style = params[:style]
+    color = params[:color]
+    @generated_data = helpers.generate_text_and_image(prompt, style, color)
+    @generated_text = @generated_data[:text]
+    @generated_images = @generated_data[:image_url]
   end
 end

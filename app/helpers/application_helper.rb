@@ -15,10 +15,10 @@ module ApplicationHelper
     text = response.choices[0].text
   end
 
-  def generate_image(image_prompt)
+  def generate_image(image_prompt, style, color)
     api_key = ENV.fetch("OPENAI_API_KEY")
     size = "512x512"
-    prompt = image_prompt
+    prompt = "#{style} #{color} #{image_prompt}"
     endpoint = "https://api.openai.com/v1/images/generations"
 
     uri = URI.parse(endpoint)
@@ -26,12 +26,12 @@ module ApplicationHelper
     http.use_ssl = true
     headers = {
       'Content-Type' => 'application/json',
-      'Authorization' => "Bearer #{api_key}"
+          'Authorization' => "Bearer #{api_key}"
     }
     body = {
       'model' => 'image-alpha-001',
       'prompt' => prompt,
-      'num_images' => 4,
+      'num_images' => 2,
       'size' => size,
       'response_format' => 'url'
     }.to_json
@@ -45,19 +45,20 @@ module ApplicationHelper
       image_urls = parsed_response["data"].map { |image_data| image_data["url"] }
       if image_urls.any?(&:nil?)
         Rails.logger.error "Error generating image: Image URL is nil. Response: #{response.body}"
-        Array.new(4, DEFAULT_IMAGE_URL)
+        Array.new(2, DEFAULT_IMAGE_URL)
       else
-        Rails.logger.info "Generated image URLs: #{image_urls.join(', ')}" # <-- Add this line
+        Rails.logger.info "Generated image URLs: #{image_urls.join(', ')}"
         image_urls
       end
     else
       Rails.logger.error "Error generating image: API request failed. Status: #{response.code}. Response: #{response.body}"
-      Array.new(4, DEFAULT_IMAGE_URL)
+      Array.new(2, DEFAULT_IMAGE_URL)
     end
   rescue StandardError => e
     Rails.logger.error "Error generating image: #{e.message}"
-    Array.new(4, DEFAULT_IMAGE_URL)
+    Array.new(2, DEFAULT_IMAGE_URL)
   end
+
 
   def generate_image_description(text)
     prompt = "Create a DALL-E image prompt for the following text: '#{text}'"
@@ -65,13 +66,14 @@ module ApplicationHelper
     image_description.strip
   end
 
-  def generate_text_and_image(prompt)
+  def generate_text_and_image(prompt, style, color)
     text_response = generate_response(prompt)
     image_description = generate_image_description(text_response)
-    image_url = generate_image(image_description)
+    image_url = generate_image(image_description, style, color)
     {
       text: text_response.strip,
       image_url: image_url
     }
   end
+
 end
