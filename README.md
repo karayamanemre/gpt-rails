@@ -15,3 +15,24 @@ git clone https://github.com/karayamanemre/gpt-rails.git
 ```bash
 bundle install
 ```
+
+3. Create a .env file in the root directory of the project and add your OpenAI API key:
+
+```bash
+OPENAI_API_KEY=your-api-key
+```
+
+4. Start the Rails server:
+
+```bash
+rails server
+```
+
+5. Visit http://localhost:3000 in your web browser to see the app in action.
+
+## Usage
+
+1. Type some text into the input field on the home page and click "Generate".
+2. Wait for the text and images to be generated.
+3. Use the left and right arrows to navigate through the generated images.
+4. Click "Copy Text" to copy the generated text to your clipboard.
