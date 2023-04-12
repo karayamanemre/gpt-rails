@@ -6,20 +6,19 @@ DEFAULT_IMAGE_URL = 'https://via.placeholder.com/480x480?text=Image+Not+Availabl
 
 
 module ApplicationHelper
-  def generate_response
+  def generate_response(prompt)
     api_key = ENV.fetch("OPENAI_API_KEY")
     engine = "text-davinci-003"
-    prompt = "Write a post-apocalyptic short story."
 
     openai_client = OpenAI::Client.new(api_key: api_key, default_engine: engine)
     response = openai_client.completions(prompt: prompt, max_tokens: 1000)
     text = response.choices[0].text
   end
 
-  def generate_image
+  def generate_image(image_prompt)
     api_key = ENV.fetch("OPENAI_API_KEY")
-    prompt = "Post-apocalyptic city view"
     size = "512x512"
+    prompt = image_prompt
     endpoint = "https://api.openai.com/v1/images/generations"
 
     uri = URI.parse(endpoint)
