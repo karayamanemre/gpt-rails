@@ -31,7 +31,7 @@ module ApplicationHelper
     body = {
       'model' => 'image-alpha-001',
       'prompt' => prompt,
-      'num_images' => 1,
+      'num_images' => 4,
       'size' => size,
       'response_format' => 'url'
     }.to_json
@@ -40,23 +40,23 @@ module ApplicationHelper
     request.body = body
     response = http.request(request)
 
-  if response.is_a?(Net::HTTPSuccess)
-    parsed_response = JSON.parse(response.body)
-    image_url = parsed_response.dig("data", 0, "url")
-    if image_url.nil?
-      Rails.logger.error "Error generating image: Image URL is nil. Response: #{response.body}"
-      DEFAULT_IMAGE_URL
+    if response.is_a?(Net::HTTPSuccess)
+      parsed_response = JSON.parse(response.body)
+      image_urls = parsed_response["data"].map { |image_data| image_data["url"] }
+      if image_urls.any?(&:nil?)
+        Rails.logger.error "Error generating image: Image URL is nil. Response: #{response.body}"
+        Array.new(4, DEFAULT_IMAGE_URL)
+      else
+        Rails.logger.info "Generated image URLs: #{image_urls.join(', ')}" # <-- Add this line
+        image_urls
+      end
     else
-      Rails.logger.info "Generated image URL: #{image_url}" # <-- Add this line
-      image_url
+      Rails.logger.error "Error generating image: API request failed. Status: #{response.code}. Response: #{response.body}"
+      Array.new(4, DEFAULT_IMAGE_URL)
     end
-  else
-    Rails.logger.error "Error generating image: API request failed. Status: #{response.code}. Response: #{response.body}"
-    DEFAULT_IMAGE_URL
-  end
-rescue StandardError => e
-  Rails.logger.error "Error generating image: #{e.message}"
-  DEFAULT_IMAGE_URL
+  rescue StandardError => e
+    Rails.logger.error "Error generating image: #{e.message}"
+    Array.new(4, DEFAULT_IMAGE_URL)
   end
 
   def generate_image_description(text)
