@@ -10,6 +10,6 @@ class HomeController < ApplicationController
     color = params[:color]
     @generated_data = helpers.generate_text_and_image(prompt, style, color)
     @generated_text = @generated_data[:text]
-    @generated_images = @generated_data[:image_url]
+    @generated_image = @generated_data[:image_url]
   end
 end
