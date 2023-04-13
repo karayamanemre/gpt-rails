@@ -16,20 +16,72 @@
   <% end %>
 
   <% if @generated_text %>
-    <div class="w-full max-w-md mt-5 p-5 bg-white rounded-md shadow-lg">
+    <div class="w-full max-w-md mt-5 p-5 bg-white rounded-md shadow-lg flex flex-col items-center justify-center">
       <h3 class="text-center text-lg font-bold mb-4">Generated Text</h3>
       <p class="text-base leading-relaxed" id="generatedText">
         <%= @generated_text %>
       </p>
+      <button class="inline-flex items-center justify-center w-full max-w-md px-4 py-2 mt-5 text-white bg-purple-500 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-purple-600 active:bg-purple-700 focus:outline-none focus:border-purple-700 focus:ring focus:ring-purple-300 disabled:opacity-25 transition ease-in-out duration-150" onclick="copyToClipboard()">
+        <i class="fas fa-copy mr-1"></i>Copy Text
+      </button>
+      <label for="voiceSelect">Choose a voice:</label>
+      <select id="voiceSelect" class="inline-flex items-center justify-center w-full max-w-md px-4 py-2 mt-2 text-white bg-orange-500 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-orange-600 active:bg-orange-700 focus:outline-none focus:border-orange-700 focus:ring focus:ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150"></select>
+      <label for="speedInput">Speed:</label>
+      <input type="range" id="speedInput" min="0.5" max="2" step="0.1" value="1" class="inline-flex items-center justify-center w-full max-w-md px-4 py-2 mt-2">
+      <span id="speedValue">1</span>
+      <button id="speakButton" class="inline-flex items-center justify-center w-full max-w-md px-4 py-2 mt-2 text-white bg-orange-500 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-orange-600 active:bg-orange-700 focus:outline-none focus:border-orange-700 focus:ring focus:ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150">
+        Speak Text
+      </button>
+      <button id="stopButton" class="inline-flex items-center justify-center w-full max-w-md px-4 py-2 mt-2 text-white bg-orange-500 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-orange-600 active:bg-orange-700 focus:outline-none focus:border-orange-700 focus:ring focus:ring-orange-300 disabled:opacity-25 transition ease-in-out duration-150">Stop</button>
     </div>
-    <button class="inline-flex items-center justify-center w-full max-w-md px-4 py-2 mt-5 text-white bg-purple-500 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-purple-600 active:bg-purple-700 focus:outline-none focus:border-purple-700 focus:ring focus:ring-purple-300 disabled:opacity-25 transition ease-in-out duration-150" onclick="copyToClipboard()">
-      <i class="fas fa-copy mr-1"></i>Copy Text
-    </button>
   <% end %>
-
 </div>
-
 <script>
+  function populateVoiceList() {
+    const voiceSelect = document.getElementById('voiceSelect');
+    const voices = speechSynthesis.getVoices();
+    voices.forEach((voice, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = `${voice.name} (${voice.lang})`;
+      voiceSelect.appendChild(option);
+    });
+  }
+
+  window.addEventListener('load', function () {
+    if (typeof speechSynthesis !== 'undefined') {
+      speechSynthesis.onvoiceschanged = populateVoiceList;
+    }
+  });
+
+  document.getElementById('stopButton').addEventListener('click', function () {
+    window.speechSynthesis.cancel();
+  });
+
+  document.getElementById('speedInput').addEventListener('input', function () {
+    const speedInput = document.getElementById('speedInput');
+    const speedValue = document.getElementById('speedValue');
+    speedValue.textContent = speedInput.value;
+  });
+
+  document.getElementById('speakButton').addEventListener('click', function () {
+    const textToSpeak = document.getElementById('generatedText').innerText;
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+
+    const voices = window.speechSynthesis.getVoices();
+    const voiceSelect = document.getElementById('voiceSelect');
+    const selectedVoiceIndex = voiceSelect.value;
+    const selectedVoice = voices[selectedVoiceIndex];
+
+    utterance.voice = selectedVoice;
+    utterance.pitch = 1;
+
+    const speedInput = document.getElementById('speedInput');
+    utterance.rate = parseFloat(speedInput.value);
+
+    window.speechSynthesis.speak(utterance);
+  });
+
   function copyToClipboard() {
     const textToCopy = document.getElementById('generatedText').innerText;
     const textarea = document.createElement('textarea');
