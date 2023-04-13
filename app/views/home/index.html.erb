@@ -17,7 +17,7 @@
       <%= label_tag :color, "Choose a color", class: "font-bold" %><br>
       <%= select_tag :color, options_for_select(['Black and White', 'Colorful', 'Monochrome']), class: 'rounded border-1 w-full outline-none transition-all duration-200 ease-linear'%>
     </div>
-    <%= button_tag(type: 'submit', class: 'cursor-pointer inline-flex items-center justify-center w-full max-w-md px-4 py-2 mt-5 text-white bg-purple-500 border border-transparent rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-purple-600 active:bg-purple-700 focus:outline-none focus:border-purple-700 focus:ring focus:ring-purple-300 disabled:opacity-25 transition ease-in-out duration-150') do %>
+    <%= button_tag(type: 'submit', class: 'cursor-pointer inline-flex items-center justify-center w-full max-w-md px-4 py-2 mt-5 text-white bg-purple-500 border border-transparent rounded-md font-bold text-sm uppercase tracking-widest hover:bg-purple-600 active:bg-purple-700 focus:outline-none focus:border-purple-700 focus:ring focus:ring-purple-300') do %>
       <i class="fas fa-play mr-1"></i> Generate
     <% end %>
   <% end %>
