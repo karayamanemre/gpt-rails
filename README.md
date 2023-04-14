@@ -34,5 +34,4 @@ rails server
 
 1. Type some text into the input field on the home page and click "Generate".
 2. Wait for the text and images to be generated.
-3. Use the left and right arrows to navigate through the generated images.
-4. Click "Copy Text" to copy the generated text to your clipboard.
+3. Click "Copy Text" to copy the generated text to your clipboard.
